@@ -1,0 +1,15 @@
+on:
+  push:
+    paths-ignore:
+      - "README.md"
+name: Verify
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    container:
+      image: instrumenta/conftest
+    steps:
+    - uses: actions/checkout@master
+    - name: Run OPA tests
+      run: |
+        find . -type d  -maxdepth 1 -mindepth 1 -not -path "./.git*" | xargs -I{} conftest verify -p {
