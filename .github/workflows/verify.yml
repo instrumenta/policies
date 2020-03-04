@@ -12,4 +12,4 @@ jobs:
     - uses: actions/checkout@master
     - name: Run OPA tests
       run: |
-        find . -type d  -maxdepth 1 -mindepth 1 -not -path "./.git*" | xargs -I{} conftest verify -p {
+        find . -type d  -maxdepth 1 -mindepth 1 -not -path "./.git*" | xargs -I{} conftest verify -p {}
