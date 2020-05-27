@@ -120,44 +120,56 @@ canonify_cpu(orig) = new {
   new := to_number(replace(orig, "m", ""))
 }
 
+canonify_cpu(orig) = new {
+  not is_number(orig)
+  not endswith(orig, "m")
+  re_match("^[0-9]+$", orig)
+  new := to_number(orig) * 1000
+}
+
+# 10 ** 21
+mem_multiple("E") = 1000000000000000000000 { true }
+
 # 10 ** 18
-size_suffix("E") = 1000000000000000000 { true }
+mem_multiple("P") = 1000000000000000000 { true }
 
 # 10 ** 15
-size_suffix("P") = 1000000000000000 { true }
+mem_multiple("T") = 1000000000000000 { true }
 
 # 10 ** 12
-size_suffix("T") = 1000000000000 { true }
+mem_multiple("G") = 1000000000000 { true }
 
 # 10 ** 9
-size_suffix("G") = 1000000000 { true }
+mem_multiple("M") = 1000000000 { true }
 
 # 10 ** 6
-size_suffix("M") = 1000000 { true }
+mem_multiple("k") = 1000000 { true }
 
 # 10 ** 3
-size_suffix("K") = 1000 { true }
+mem_multiple("") = 1000 { true }
 
+# Kubernetes accepts millibyte precision when it probably shouldn't.
+# https://github.com/kubernetes/kubernetes/issues/28741
 # 10 ** 0
-size_suffix("") = 1 { true }
+mem_multiple("m") = 1 { true }
 
-# 2 ** 10
-size_suffix("Ki") = 1024 { true }
+# 1000 * 2 ** 10
+mem_multiple("Ki") = 1024000 { true }
 
-# 2 ** 20
-size_suffix("Mi") = 1048576 { true }
+# 1000 * 2 ** 20
+mem_multiple("Mi") = 1048576000 { true }
 
-# 2 ** 30
-size_suffix("Gi") = 1073741824 { true }
+# 1000 * 2 ** 30
+mem_multiple("Gi") = 1073741824000 { true }
 
-# 2 ** 40
-size_suffix("Ti") = 1099511627776 { true }
+# 1000 * 2 ** 40
+mem_multiple("Ti") = 1099511627776000 { true }
 
-# 2 ** 50
-size_suffix("Pi") = 1125899906842624 { true }
+# 1000 * 2 ** 50
+mem_multiple("Pi") = 1125899906842624000 { true }
 
-# 2 ** 60
-size_suffix("Ei") = 1152921504606846976 { true }
+# 1000 * 2 ** 60
+mem_multiple("Ei") = 1152921504606846976000 { true }
 
 get_suffix(mem) = suffix {
   not is_string(mem)
@@ -168,28 +180,28 @@ get_suffix(mem) = suffix {
   is_string(mem)
   count(mem) > 0
   suffix := substring(mem, count(mem) - 1, -1)
-  size_suffix(suffix)
+  mem_multiple(suffix)
 }
 
 get_suffix(mem) = suffix {
   is_string(mem)
   count(mem) > 1
   suffix := substring(mem, count(mem) - 2, -1)
-  size_suffix(suffix)
+  mem_multiple(suffix)
 }
 
 get_suffix(mem) = suffix {
   is_string(mem)
   count(mem) > 1
-  not size_suffix(substring(mem, count(mem) - 1, -1))
-  not size_suffix(substring(mem, count(mem) - 2, -1))
+  not mem_multiple(substring(mem, count(mem) - 1, -1))
+  not mem_multiple(substring(mem, count(mem) - 2, -1))
   suffix := ""
 }
 
 get_suffix(mem) = suffix {
   is_string(mem)
   count(mem) == 1
-  not size_suffix(substring(mem, count(mem) - 1, -1))
+  not mem_multiple(substring(mem, count(mem) - 1, -1))
   suffix := ""
 }
 
@@ -199,15 +211,15 @@ get_suffix(mem) = suffix {
   suffix := ""
 }
 
-canonify_storage(orig) = new {
+canonify_mem(orig) = new {
   is_number(orig)
-  new := orig
+  new := orig * 1000
 }
 
-canonify_storage(orig) = new {
+canonify_mem(orig) = new {
   not is_number(orig)
   suffix := get_suffix(orig)
   raw := replace(orig, suffix, "")
   re_match("^[0-9]+$", raw)
-  new := to_number(raw) * size_suffix(suffix)
+  new := to_number(raw) * mem_multiple(suffix)
 }
