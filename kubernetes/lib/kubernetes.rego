@@ -36,6 +36,10 @@ is_deployment {
 	kind = "Deployment"
 }
 
+is_daemonset {
+  kind = "DaemonSet"
+}
+
 is_pod {
 	kind = "Pod"
 }
@@ -62,6 +66,11 @@ containers[container] {
 containers[container] {
 	all_containers = pod_containers(object)
 	container = all_containers[_]
+}
+
+pods[pod] {
+	is_daemonset
+	pod = object.spec.template
 }
 
 pods[pod] {
