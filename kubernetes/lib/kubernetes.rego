@@ -44,6 +44,14 @@ is_pod {
 	kind = "Pod"
 }
 
+is_job {
+	kind = "Job"
+}
+
+is_cronjob {
+	kind = "CronJob"
+}
+
 split_image(image) = [image, "latest"] {
 	not contains(image, ":")
 }
@@ -81,6 +89,16 @@ pods[pod] {
 pods[pod] {
 	is_pod
 	pod = object
+}
+
+pods[pod] {
+	is_job
+	pod = object.spec.template
+}
+
+pods[pod] {
+	is_cronjob
+	pod = object.spec.jobTemplate.spec.template
 }
 
 volumes[volume] {
