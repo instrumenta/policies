@@ -52,8 +52,8 @@ violation[msg] {
 
 violation[msg] {
 	kubernetes.containers[container]
-	kubernetes.priviledge_escalation_allowed(container)
-	msg = kubernetes.format(sprintf("%s in the %s %s allows priviledge escalation", [container.name, kubernetes.kind, kubernetes.name]))
+	kubernetes.privilege_escalation_allowed(container)
+	msg = kubernetes.format(sprintf("%s in the %s %s allows privilege escalation", [container.name, kubernetes.kind, kubernetes.name]))
 }
 
 # https://kubesec.io/basics/containers-securitycontext-runasnonroot-true/
