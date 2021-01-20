@@ -19,7 +19,7 @@ FAIL - deployment+service.yaml - hello-kubernetes in the Deployment hello-kubern
 FAIL - deployment+service.yaml - hello-kubernetes in the Deployment hello-kubernetes does not have a CPU limit set
 FAIL - deployment+service.yaml - hello-kubernetes in the Deployment hello-kubernetes doesn't drop all capabilities
 FAIL - deployment+service.yaml - hello-kubernetes in the Deployment hello-kubernetes is not using a read only root filesystem
-FAIL - deployment+service.yaml - hello-kubernetes in the Deployment hello-kubernetes allows priviledge escalation
+FAIL - deployment+service.yaml - hello-kubernetes in the Deployment hello-kubernetes allows privilege escalation
 FAIL - deployment+service.yaml - hello-kubernetes in the Deployment hello-kubernetes is running as root
 ```
 
